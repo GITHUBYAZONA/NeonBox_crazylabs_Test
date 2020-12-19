@@ -39,6 +39,7 @@ public class WallScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if the wall got to his target go back to the start and randomize obsticle
         if (transform.position == MoveToTarget)
         {
             transform.position = startPosition;
@@ -52,6 +53,8 @@ public class WallScript : MonoBehaviour
               child.localScale = new Vector3(wallScale, child.transform.localScale.y, child.transform.localScale.z); ;
           }
         */
+
+        //wall movement
         transform.position = Vector3.MoveTowards(transform.position, MoveToTarget, Time.deltaTime * speed);
     }
     
@@ -62,6 +65,7 @@ public class WallScript : MonoBehaviour
         
     }
 
+    //randomize which lane will be the hole
     public void randomWallPosition()
     {
         int whichLane = Random.Range(-1, 2);
@@ -90,6 +94,7 @@ public class WallScript : MonoBehaviour
         }
     }
 
+    //randomize hole
     private void randomObs()
     {
         int ObsRandomize = Random.Range(0, 3);

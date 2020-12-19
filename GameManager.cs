@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject settingsWindow;   
 
+    //open and close settings window
     public void SettingsOnOff()
     {
         if (settingsWindow.activeSelf == false)
@@ -86,6 +87,7 @@ public class GameManager : MonoBehaviour
             quitButton.gameObject.SetActive(true);
         }
     }
+
 
     public Image[] playerCosmeticsUI;
    
@@ -111,10 +113,11 @@ public class GameManager : MonoBehaviour
     //----------------------------------------------------------------------
     //Sound Settings
     public AudioClip[] playerClips;
-    public Button[] soundsUI;    
-    //public AudioListener gameSound;
+    public Button[] soundsUI;        
     public Text soundSwitcher;
 
+
+    //sound on / off button
     public void muteGame()
     {
         if (AudioListener.pause == false)
@@ -132,6 +135,8 @@ public class GameManager : MonoBehaviour
             soundSwitcher.text = "<color=white>Sound:</color><color=#00F9FF> ON</color><color=white> /</color><color=grey> OFF</color>"; // sound is on
         }            
     }
+
+    //checks if game preference is muted or not
     private void checkIfGameMuted()
     {
         switch (PlayerPrefs.GetInt("volume", 1))
@@ -181,7 +186,7 @@ public class GameManager : MonoBehaviour
     public Material playerMatt;
 
 
-
+    //player icon
     public void selectCosmetics(int select)
     {
         PlayerPrefs.SetInt("currentCosmetics",select);
@@ -191,7 +196,7 @@ public class GameManager : MonoBehaviour
         currentCosmeticUI(select);
     }
 
-    
+    //player color
     public void selectCosmeticsColor(int color)
     {
         Color selectedColor;
@@ -241,6 +246,8 @@ public class GameManager : MonoBehaviour
     public Volume postProccesing;
     private Bloom bloom;
     public Slider bloomSliderUI;
+
+    
     public void bloomSlider(float i)
     {
         bloom.intensity.value = i;
@@ -252,28 +259,36 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        //sound
         Beat = GetComponent<AudioSource>();
         playExampleSound = soundBox.GetComponent<AudioSource>();
-        postProccesing.profile.TryGet(out bloom);
-        bloomSliderUI.value = PlayerPrefs.GetFloat("defaultBloom", 5);
-
         changeClip(PlayerPrefs.GetInt("currentClip", 0));
-
         checkIfGameMuted();
+
+        //bloom effect and settings
+        postProccesing.profile.TryGet(out bloom);
+        bloomSliderUI.value = PlayerPrefs.GetFloat("defaultBloom", 5);        
+        
 
         highScoreNumb = PlayerPrefs.GetInt("HighScore", 0);
         highScoreText.text = highScoreNumb.ToString();
+
         Menu.SetActive(true);
         scoreIMG.SetActive(false);
         quitButton.gameObject.SetActive(true);
+
         counterImage1.gameObject.SetActive(false);
         counterImage2.gameObject.SetActive(false);
         counterImage3.gameObject.SetActive(false);
+
         scoreText.text = score.ToString();
+
         Time.timeScale = 0;
+
+        //cosmetics settings
         selectCosmetics(PlayerPrefs.GetInt("currentCosmetics", 1));
         selectCosmeticsColor(PlayerPrefs.GetInt("currentCosmeticsColor", 0));
+
         floorSpeed = -10.5f;
         floorMatt.SetVector("Vector2_85B49CA4", new Vector2(0, floorSpeed));
         score = 0;
@@ -305,6 +320,7 @@ public class GameManager : MonoBehaviour
     }
 
 
+    //score system and text moving
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == 12 && !isPause)
@@ -340,12 +356,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    // beat sound
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.layer == 12 && !isPause)
         Beat.Play();
     }
 
+
+    //3 seconds countdown before a match
     IEnumerator PreGameCountdown()
     {
         Player.GetComponent<PlayerScript>().gameStarted = false;
@@ -381,6 +401,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+    //play button
     public void startGame()
     {
         quitButton.gameObject.SetActive(false);
@@ -389,10 +410,9 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PreGameCountdown());
     }
 
+    //When player lose, pause the game, checks if there is a new high score and open menu.
     public void gameOver()
-    {
-        
-
+    {        
         isPause = true;
         Time.timeScale = 0;
         quitButton.gameObject.SetActive(true);

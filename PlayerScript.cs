@@ -72,8 +72,6 @@ public class PlayerScript : MonoBehaviour
                     Debug.Log(laneNumber);
                     Beat.pitch = 1.5f;
                     Beat.Play();
-
-
                 }
 
             }
@@ -205,6 +203,7 @@ public class PlayerScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //End the game if hit a wall
         if (other.gameObject.layer == 10)
         {
             _GM.GetComponent<GameManager>().gameOver();     
